@@ -11,44 +11,46 @@ typedef struct{
     int x[10000];
     int size;
     int exist;
-} conjuntos;
+} conjunto;
 
-int criaConjunto(conjuntos * C);
+int criaConjunto(conjunto * C);
 
-int conjuntoVazio(conjuntos * C);
+int conjuntoVazio(conjunto * C);
 
-int insereElementoConjunto(int x, conjuntos * C);
+int insereElementoConjunto(int x, conjunto * C);
 
-int excluirElementoConjunto(int x,conjuntos * C);
+int excluirElementoConjunto(int x,conjunto * C);
 
-int tamanhoConjunto(conjuntos * C);
+int tamanhoConjunto(conjunto * C);
 
-int maior(int x, conjuntos * C);
+int maior(int x, conjunto * C);
 
-int menor(int x, conjuntos * C);
+int menor(int x, conjunto * C);
 
-int pertenceConjunto(int x, conjuntos * C);
+int pertenceConjunto(int x, conjunto * C);
 
-int conjuntosIdenticos(conjuntos * C1, conjuntos * C2);
+int conjuntoIdenticos(conjunto * C1, conjunto * C2);
 
-int subconjunto(conjuntos * C1, conjuntos * C2);
+int subconjunto(conjunto * C1, conjunto * C2);
 
-void complemento(conjuntos C1, conjuntos C2);
+conjunto complemento(conjunto C1, conjunto C2);
 
 void swap(int *a, int *b);
 
 void selectionSort(int array[], int n);
 
-void uniao(conjuntos C1, conjuntos C2);
+conjunto uniao(conjunto C1, conjunto C2);
 
-void intersec(conjuntos C1, conjuntos C2);
+conjunto intersec(conjunto C1, conjunto C2);
+
+conjunto diferenca(conjunto C1, conjunto C2);
 
 void printpowerset(int *set, int set_size);
 
-void printconj(conjuntos * C, int ordem);
+void mostraConjunto(conjunto C, int ordem);
 
-void copy(conjuntos * C1, conjuntos * C2);
+void copy(conjunto * C1, conjunto * C2);
 
-void destroiconj(conjuntos * C);
+void destroiconj(conjunto * C);
 
-int testeexistconj(conjuntos * C);
+int testeexistconj(conjunto * C);

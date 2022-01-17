@@ -17,20 +17,20 @@ void selectionSort(int array[], int n){
     } 
 }
 
-int criaConjunto(conjuntos * C){
+int criaConjunto(conjunto * C){
     (C->exist) = 1;
     if ((C->exist) == 1) return 1;
     else return 0;
 }
 
-int conjuntoVazio(conjuntos * C){
+int conjuntoVazio(conjunto * C){
     if(C->exist == 0)
         return 0;
     if ((C->size) == 0) return 0;
     else return 1;
 }
 
-int insereElementoConjunto(int x, conjuntos * C){
+int insereElementoConjunto(int x, conjunto * C){
     int i, k = 0;
     if(C->exist == 0) 
         return 0;
@@ -48,7 +48,7 @@ int insereElementoConjunto(int x, conjuntos * C){
     }
 }
 
-int excluirElementoConjunto(int x,conjuntos * C){
+int excluirElementoConjunto(int x,conjunto * C){
     int i, k=0, u;
     if(C->exist == 0)
         return 0;
@@ -68,13 +68,13 @@ int excluirElementoConjunto(int x,conjuntos * C){
     }
 }
 
-int tamanhoConjunto(conjuntos * C){
+int tamanhoConjunto(conjunto * C){
     if(C->exist == 0)
         return 0;
     return C->size;
 }
 
-int maior(int x, conjuntos * C){
+int maior(int x, conjunto * C){
     int i, cont=-1;
     if(C->exist == 0)
         return -1;
@@ -89,7 +89,7 @@ int maior(int x, conjuntos * C){
     else return -1;
 }
 
-int menor(int x, conjuntos * C){
+int menor(int x, conjunto * C){
     int i, cont=-1;
     if(C->exist == 0)
         return -1;
@@ -104,7 +104,7 @@ int menor(int x, conjuntos * C){
     else return -1;
 }
 
-int pertenceConjunto(int x, conjuntos * C){
+int pertenceConjunto(int x, conjunto * C){
     int i;
     if(C->exist == 0)
         return 0;
@@ -114,7 +114,7 @@ int pertenceConjunto(int x, conjuntos * C){
     return 0;
 }
 
-int conjuntosIdenticos(conjuntos * C1, conjuntos * C2){
+int conjuntoIdenticos(conjunto * C1, conjunto * C2){
     int i, k=0;
     if(C1->exist == 0)
         return 0;
@@ -128,7 +128,7 @@ int conjuntosIdenticos(conjuntos * C1, conjuntos * C2){
     else return 0;
 }
 
-int subconjunto(conjuntos * C1, conjuntos * C2){
+int subconjunto(conjunto * C1, conjunto * C2){
     int cont=0 , i, j;
     for(i=0 ; i<(C1->size) ; i++){
         for(j=0 ; j<(C2->size) ; j++){
@@ -139,74 +139,78 @@ int subconjunto(conjuntos * C1, conjuntos * C2){
     else return 0;
 }
 
-void complemento(conjuntos C1, conjuntos C2){
-    int i, j, k, cont=0, init=0;
-    printf("{ ");
+conjunto complemento(conjunto C1, conjunto C2){
+    conjunto x;
+    int i, j, k, cont=0, z;
+    x.exist = 1;
+    if (C1.size > C2.size) x.size = C1.size;
+    else x.size = C2.size;
     for (i=0 ; i<(C2.size) ; i++){
         k=0;
         for(j=0 ; j<(C1.size) ; j++){
             if (C2.x[i] == C1.x[j]) k=1;
         }
         if (k==0){
-            if (init==0) {
-                printf("%d", C2.x[i]);
-                init = 1;
-            }
-            else printf(", %d", C2.x[i]);
+            x.x[i] = C2.x[i];
         }
+        else x.x[i] = -1;
     }
-    printf(" }\n");
+    z = i;
+    for (i=z ; i<x.size ; i++) x.x[i] = -1;
+    selectionSort(x.x, x.size);
+    return x;
 }
 
-void uniao(conjuntos C1, conjuntos C2){
-    int i, j, k, cont=0, init=0;
-    printf("{ ");
-    for (i=0 ; i<(C2.size) ; i++){
+conjunto uniao(conjunto C1, conjunto C2){
+    conjunto x;
+    int i, j, k, cont=0, z;
+    x.exist = 1;
+    x.size = C1.size+C2.size;
+    for (i=0 ; i<x.size ; i++) x.x[i] = -1;
+    for (i=0 ; i<C1.size ; i++){
+        x.x[i] = C1.x[i];
+    }
+    z=i;
+    for(i=0 ; i<C2.size ; i++){
         k=0;
-        for(j=0 ; j<(C1.size) ; j++){
-            if (C2.x[i] == C1.x[j]) k=1;
+        for (j=0 ; j<x.size ; j++){
+            if (C2.x[i] == x.x[j]) k=1;
         }
         if (k==0){
-            if (init==0) {
-                printf("%d", C2.x[i]);
-                init = 1;
-            }
-            else printf(", %d", C2.x[i]);
+            x.x[z] = C2.x[i];
+            z++;
         }
+        else continue;
     }
-    for (i=0 ; i<(C1.size) ; i++){
-        k=0;
-        for(j=0 ; j<(C2.size) ; j++){
-            if (C1.x[i] == C2.x[j]) k=1;
-        }
-        if (k==0){
-            if (init==0) {
-                printf("%d", C1.x[i]);
-                init = 1;
-            }
-            else printf(", %d", C1.x[i]);
-        }
-    }
-    printf(" }\n");
+    for (i=z ; i<x.size ; i++) x.x[i] = -1;
+    selectionSort(x.x, x.size);
+    return x;
 }
 
-void intersec(conjuntos C1, conjuntos C2){
-    int i, j, k, cont=0, init=0;
-    printf("{ ");
+conjunto interseccao(conjunto C1, conjunto C2){
+    conjunto x;
+    int i, j, k, cont=0, z;
+    x.exist = 1;
+    if (C1.size > C2.size) x.size = C1.size;
+    else x.size = C2.size;
     for (i=0 ; i<(C2.size) ; i++){
         k=1;
         for(j=0 ; j<(C1.size) ; j++){
             if (C2.x[i] == C1.x[j]) k=0;
         }
         if (k==0){
-            if (init==0) {
-                printf("%d", C2.x[i]);
-                init = 1;
-            }
-            else printf(", %d", C2.x[i]);
+            x.x[i] = C2.x[i];
         }
+        else x.x[i] = -1;
     }
-    printf(" }\n");
+    z = i;
+    for (i=z ; i<x.size ; i++) x.x[i] = -1;
+    selectionSort(x.x, x.size);
+    return x;
+}
+
+conjunto diferenca(conjunto C1, conjunto C2){
+    return complemento(C1,C2);
 }
 
 void printpowerset(int *set, int set_size){
@@ -229,30 +233,35 @@ void printpowerset(int *set, int set_size){
     }
 }
 
-void printconj(conjuntos * C, int ordem){
+void mostraConjunto(conjunto C, int ordem){
     int x, y, i, init = 0, z;
+    selectionSort(C.x, C.size);
     if (ordem == CRESCENTE){
         x=0;
-        y= C->size-1;
+        y= C.size-1;
     }
     else{
         y=0;
-        x= (C->size-1)*(-1);
+        x= (C.size-1)*(-1);
     }
     printf("{ ");
     for(i=x; i<=y; i++){
         if (x<0) z = i*-1;
         else z = i;
         if (init == 0){
-            printf ("%d", C->x[z]);
-            init = 1;
+            if(C.x[z] != -1){
+                printf ("%d", C.x[z]);
+                init = 1;
+            }
         }
-        else printf (", %d", C->x[z]);
+        else {
+            if(C.x[z]!=-1) printf (", %d", C.x[z]);
+        }
     }
     printf(" }\n");
 }
 
-void copy(conjuntos * C1, conjuntos * C2){
+void copy(conjunto * C1, conjunto * C2){
     int i;
     C2->size = C1->size;
     C2->exist = C1->exist;
@@ -261,20 +270,20 @@ void copy(conjuntos * C1, conjuntos * C2){
     }
 }
 
-void destroiconj(conjuntos * C){
+void destroiconj(conjunto * C){
     C->size = 0;
     C->exist = 0;
 }
 
-int testeexistconj(conjuntos * C){
+int testeexistconj(conjunto * C){
     if (C->exist == 0) return 0;
     else return 1;
 }
 
 int main(){
     int x, finalize=1, n1, tof, n2;
-    conjuntos c1, c2, c3;
-    c3.exist = c3.size = c2.exist = c2.size = c1.exist = c1.size = 0;
+    conjunto c1, c2, c3, c4, c5, c6, c7;
+    c7.exist = c7.size = c6.exist = c6.size = c5.exist = c5.size = c4.exist = c4.size = c3.exist = c3.size = c2.exist = c2.size = c1.exist = c1.size = 0;
     while(finalize){
         system("CLS");
         printf("Digite 00 para finalizar.\n");
@@ -286,12 +295,12 @@ int main(){
         printf("Digite 06 para determinar quantos elementos do conjunto sao maiores que um numero.\n");
         printf("Digite 07 para determinar quantos elementos do conjunto sao menores que um numero.\n");
         printf("Digite 08 para verificar se um numero pertence a um conjunto.\n");
-        printf("Digite 09 para comparar se dois conjuntos sao iguais.\n");
+        printf("Digite 09 para comparar se dois conjunto sao iguais.\n");
         printf("Digite 10 para saber se um conjunto e subconjunto de outro.\n");
-        printf("Digite 11 para gerar o conjunto complemento entre 2 conjuntos.\n");
-        printf("Digite 12 para para gerar a uniao entre 2 conjuntos.\n");
-        printf("Digite 13 para para gerar a intersecao entre 2 conjuntos.\n");
-        printf("Digite 14 para para gerar a diferenca entre 2 conjuntos.\n");
+        printf("Digite 11 para gerar o conjunto complemento entre 2 conjunto.\n");
+        printf("Digite 12 para para gerar a uniao entre 2 conjunto.\n");
+        printf("Digite 13 para para gerar a interseccaoao entre 2 conjunto.\n");
+        printf("Digite 14 para para gerar a diferenca entre 2 conjunto.\n");
         printf("Digite 15 para gerar o conjunto das partes de um conjunto.\n");
         printf("Digite 16 para mostrar um conjunto.\n");
         printf("Digite 17 para copiar um conjunto para o outro.\n");
@@ -542,32 +551,32 @@ int main(){
                 printf("Qual conjunto a ser comparado? (1, 2, 3)\n");
                 scanf("%d%*c", &n2);
                 if (n1 == 1 && n2 == 2){
-                    tof = conjuntosIdenticos(&c1, &c2);
+                    tof = conjuntoIdenticos(&c1, &c2);
                     if (tof == 1) printf("Conjunto %d e igual ao Conjunto %d.\n", n1, n2);
                     else printf("Conjunto %d nao e igual ao Conjunto %d.\n", n1, n2);
                 }
                 else if (n1 == 1 && n2 == 3){
-                    tof = conjuntosIdenticos(&c1, &c3);
+                    tof = conjuntoIdenticos(&c1, &c3);
                     if (tof == 1) printf("Conjunto %d e igual ao Conjunto %d.\n", n1, n2);
                     else printf("Conjunto %d nao e igual ao Conjunto %d.\n", n1, n2);
                 }
                 else if (n1 == 2 && n2 == 1){
-                    tof = conjuntosIdenticos(&c2, &c1);
+                    tof = conjuntoIdenticos(&c2, &c1);
                     if (tof == 1) printf("Conjunto %d e igual ao Conjunto %d.\n", n1, n2);
                     else printf("Conjunto %d nao e igual ao Conjunto %d.\n", n1, n2);
                 }
                 else if (n1 == 2 && n2 == 3){
-                    tof = conjuntosIdenticos(&c2, &c3);
+                    tof = conjuntoIdenticos(&c2, &c3);
                     if (tof == 1) printf("Conjunto %d e igual ao Conjunto %d.\n", n1, n2);
                     else printf("Conjunto %d nao e igual ao Conjunto %d.\n", n1, n2);
                 }
                 else if (n1 == 3 && n2 == 2){
-                    tof = conjuntosIdenticos(&c3, &c2);
+                    tof = conjuntoIdenticos(&c3, &c2);
                     if (tof == 1) printf("Conjunto %d e igual ao Conjunto %d.\n", n1, n2);
                     else printf("Conjunto %d nao e igual ao Conjunto %d.\n", n1, n2);
                 }
                 else if (n1 == 3 && n2 == 1){
-                    tof = conjuntosIdenticos(&c3, &c1);
+                    tof = conjuntoIdenticos(&c3, &c1);
                     if (tof == 1) printf("Conjunto %d e igual ao Conjunto %d.\n", n1, n2);
                     else printf("Conjunto %d nao e igual ao Conjunto %d.\n", n1, n2);
                 }
@@ -609,7 +618,10 @@ int main(){
                     if (tof == 1) printf("Conjunto %d e subconjunto do Conjunto %d.\n", n1, n2);
                     else printf("Conjunto %d nao e subconjunto do Conjunto %d.\n", n1, n2);
                 }
-                else printf("Voce nao pode copiar um conjunto para ele mesmo!\n");
+                else{
+                    if ((n1 == 1 && n2==1) || (n1 == 2 && n2==2) || (n1 == 3 && n2==3)) printf("Voce nao pode copiar um conjunto para ele mesmo!\n");
+                    else printf("Numero de conjunto invalido!\n");
+                }
                 system("PAUSE");
             break;
             case 11:
@@ -618,30 +630,33 @@ int main(){
                 printf("Em relacao a qual conjunto? (1, 2, 3)\n");
                 scanf("%d%*c", &n2);
                 if (n1 == 1 && n2 == 2){
-                    printf("Segue o conjunto complemento do Conjunto %d em relacao ao Conjunto %d = (Todos que estao em %d que nao estao em %d) = )", n2, n1, n2, n1);
-                    complemento(c1, c2);
+                    printf("Gerando o conjunto 4 (complemento)... Entre o Conjunto %d e o Conjunto %d = (Todos que estao em %d que nao estao em %d)\n", n2, n1, n2, n1);
+                    c4 = complemento(c1, c2);
                 }
                 else if (n1 == 1 && n2 == 3){
-                    printf("Segue o conjunto complemento do Conjunto %d em relacao ao Conjunto %d = (Todos que estao em %d que nao estao em %d) = )", n2, n1, n2, n1);
-                    complemento(c1, c3);
+                    printf("Gerando o conjunto 4 (complemento)... Entre o Conjunto %d e o Conjunto %d = (Todos que estao em %d que nao estao em %d)\n", n2, n1, n2, n1);
+                    c4 = complemento(c1, c3);
                 }
                 else if (n1 == 2 && n2 == 1){
-                    printf("Segue o conjunto complemento do Conjunto %d em relacao ao Conjunto %d = (Todos que estao em %d que nao estao em %d) = )", n2, n1, n2, n1);
-                    complemento(c2, c1);
+                    printf("Gerando o conjunto 4 (complemento)... Entre o Conjunto %d e o Conjunto %d = (Todos que estao em %d que nao estao em %d)\n", n2, n1, n2, n1);
+                    c4 = complemento(c2, c1);
                 }
                 else if (n1 == 2 && n2 == 3){
-                    printf("Segue o conjunto complemento do Conjunto %d em relacao ao Conjunto %d = (Todos que estao em %d que nao estao em %d) = )", n2, n1, n2, n1);
-                    complemento(c2, c3);
+                    printf("Gerando o conjunto 4 (complemento)... Entre o Conjunto %d e o Conjunto %d = (Todos que estao em %d que nao estao em %d)\n", n2, n1, n2, n1);
+                    c4 = complemento(c2, c3);
                 }
                 else if (n1 == 3 && n2 == 2){
-                    printf("Segue o conjunto complemento do Conjunto %d em relacao ao Conjunto %d = (Todos que estao em %d que nao estao em %d) = )", n2, n1, n2, n1);
-                    complemento(c3, c2);
+                    printf("Gerando o conjunto 4 (complemento)... Entre o Conjunto %d e o Conjunto %d = (Todos que estao em %d que nao estao em %d)\n", n2, n1, n2, n1);
+                    c4 = complemento(c3, c2);
                 }
                 else if (n1 == 3 && n2 == 1){
-                    printf("Segue o conjunto complemento do Conjunto %d em relacao ao Conjunto %d = (Todos que estao em %d que nao estao em %d) = )", n2, n1, n2, n1);
-                    complemento(c3, c1);
+                    printf("Gerando o conjunto 4 (complemento)... Entre o Conjunto %d e o Conjunto %d = (Todos que estao em %d que nao estao em %d)\n", n2, n1, n2, n1);
+                    c4 = complemento(c3, c1);
                 }
-                else printf("{ }\n");
+                else{
+                    if ((n1 == 1 && n2==1) || (n1 == 2 && n2==2) || (n1 == 3 && n2==3)) printf("{ }\n");
+                    else printf("Numero de conjunto invalido!\n");
+                }
                 system("PAUSE");
             break;
             case 12:
@@ -650,68 +665,72 @@ int main(){
                 printf("Em relacao a qual conjunto? (1, 2, 3)\n");
                 scanf("%d%*c", &n2);
                 if (n1 == 1 && n2 == 2){
-                    printf("Segue o conjunto uniao do Conjunto %d em relacao ao Conjunto %d = ", n1, n2);
-                    uniao(c1, c2);
+                    printf("Gerando o conjunto 5 (uniao)... Entre o Conjunto %d e o Conjunto %d.\n", n1, n2);
+                    c5 = uniao(c1, c2);
                 }
                 else if (n1 == 1 && n2 == 3){
-                    printf("Segue o conjunto uniao do Conjunto %d em relacao ao Conjunto %d = ", n1, n2);
-                    uniao(c1, c3);
+                    printf("Gerando o conjunto 5 (uniao)... Entre o Conjunto %d e o Conjunto %d.\n", n1, n2);
+                    c5 = uniao(c1, c3);
                 }
                 else if (n1 == 2 && n2 == 1){
-                    printf("Segue o conjunto uniao do Conjunto %d em relacao ao Conjunto %d = ", n1, n2);
-                    uniao(c2, c1);
+                    printf("Gerando o conjunto 5 (uniao)... Entre o Conjunto %d e o Conjunto %d.\n", n1, n2);
+                    c5 = uniao(c2, c1);
                 }
                 else if (n1 == 2 && n2 == 3){
-                    printf("Segue o conjunto uniao do Conjunto %d em relacao ao Conjunto %d = ", n1, n2);
-                    uniao(c2, c3);
+                    printf("Gerando o conjunto 5 (uniao)... Entre o Conjunto %d e o Conjunto %d.\n", n1, n2);
+                    c5 = uniao(c2, c3);
                 }
                 else if (n1 == 3 && n2 == 2){
-                    printf("Segue o conjunto uniao do Conjunto %d em relacao ao Conjunto %d = ", n1, n2);
-                    uniao(c3, c2);
+                    printf("Gerando o conjunto 5 (uniao)... Entre o Conjunto %d e o Conjunto %d.\n", n1, n2);
+                    c5 = uniao(c3, c2);
                 }
                 else if (n1 == 3 && n2 == 1){
-                    printf("Segue o conjunto uniao do Conjunto %d em relacao ao Conjunto %d = ", n1, n2);
-                    uniao(c3, c1);
+                    printf("Gerando o conjunto 5 (uniao)... Entre o Conjunto %d e o Conjunto %d.\n", n1, n2);
+                    c5 = uniao(c3, c1);
                 }
-                else printf("{ }\n");
+                else{
+                    if ((n1 == 1 && n2==1) || (n1 == 2 && n2==2) || (n1 == 3 && n2==3)) printf("{ }\n");
+                    else printf("Numero de conjunto invalido!\n");
+                }
                 system("PAUSE");
             break;
             case 13:
-                printf("Deseja descobrir o conjunto intersecao de qual conjunto? (1, 2, 3)\n");
+                printf("Deseja descobrir o conjunto interseccao de qual conjunto? (1, 2, 3)\n");
                 scanf("%d%*c", &n1);
                 printf("Em relacao a qual conjunto? (1, 2, 3)\n");
                 scanf("%d%*c", &n2);
                 if (n1 == 1 && n2 == 2){
-                    printf("Segue o conjunto intersecao do Conjunto %d em relacao ao Conjunto %d = ", n1, n2);
-                    intersec(c1, c2);
+                    printf("Gerando o conjunto 6 (intersecao)... Entre o Conjunto %d e o Conjunto %d.\n", n1, n2);
+                    c6 = interseccao(c1, c2);
                 }
                 else if (n1 == 1 && n2 == 3){
-                    printf("Segue o conjunto intersecao do Conjunto %d em relacao ao Conjunto %d = ", n1, n2);
-                    intersec(c1, c3);
+                    printf("Gerando o conjunto 6 (intersecao)... Entre o Conjunto %d e o Conjunto %d.\n", n1, n2);
+                    c6 = interseccao(c1, c3);
                 }
                 else if (n1 == 2 && n2 == 1){
-                    printf("Segue o conjunto intersecao do Conjunto %d em relacao ao Conjunto %d = ", n1, n2);
-                    intersec(c2, c1);
+                    printf("Gerando o conjunto 6 (intersecao)... Entre o Conjunto %d e o Conjunto %d.\n", n1, n2);
+                    c6 = interseccao(c2, c1);
                 }
                 else if (n1 == 2 && n2 == 3){
-                    printf("Segue o conjunto intersecao do Conjunto %d em relacao ao Conjunto %d = ", n1, n2);
-                    intersec(c2, c3);
+                    printf("Gerando o conjunto 6 (intersecao)... Entre o Conjunto %d e o Conjunto %d.\n", n1, n2);
+                    c6 = interseccao(c2, c3);
                 }
                 else if (n1 == 3 && n2 == 2){
-                    printf("Segue o conjunto intersecao do Conjunto %d em relacao ao Conjunto %d = ", n1, n2);
-                    intersec(c3, c2);
+                    printf("Gerando o conjunto 6 (intersecao)... Entre o Conjunto %d e o Conjunto %d.\n", n1, n2);
+                    c6 = interseccao(c3, c2);
                 }
                 else if (n1 == 3 && n2 == 1){
-                    printf("Segue o conjunto intersecao do Conjunto %d em relacao ao Conjunto %d = ", n1, n2);
-                    intersec(c3, c1);
+                    printf("Gerando o conjunto 6 (intersecao)... Entre o Conjunto %d e o Conjunto %d.\n", n1, n2);
+                    c6 = interseccao(c3, c1);
                 }
                 else {
                     selectionSort(c1.x, c1.size);
                     selectionSort(c2.x, c2.size);
                     selectionSort(c3.x, c3.size);
-                    if (n1 == 1) printconj(&c1, CRESCENTE);
-                    else if (n1 == 2) printconj(&c2, CRESCENTE);
-                    else printconj(&c3, CRESCENTE);
+                    if (n1 == 1 && n2==1) c5 = c1;
+                    else if (n1 == 2 && n2==2) c5 = c2;
+                    else if (n1 == 3 && n2==3) c5 = c3;
+                    else printf("Numero de conjunto invalido!\n");
                 }
                 system("PAUSE");
             break;
@@ -721,30 +740,33 @@ int main(){
                 printf("Em relacao a qual conjunto? (1, 2, 3)\n");
                 scanf("%d%*c", &n2);
                 if (n1 == 1 && n2 == 2){
-                    printf("Segue o conjunto diferenca do Conjunto %d em relacao ao Conjunto %d = ", n1, n2);
-                    complemento(c2, c1);
+                    printf("Gerando o conjunto 7 (diferenca)... Entre o Conjunto %d e o Conjunto %d.\n", n1, n2);
+                    c7 = diferenca(c2, c1);
                 }
                 else if (n1 == 1 && n2 == 3){
-                    printf("Segue o conjunto diferenca do Conjunto %d em relacao ao Conjunto %d = ", n1, n2);
-                    complemento(c3, c1);
+                    printf("Gerando o conjunto 7 (diferenca)... Entre o Conjunto %d e o Conjunto %d.\n", n1, n2);
+                    c7 = diferenca(c3, c1);
                 }
                 else if (n1 == 2 && n2 == 1){
-                    printf("Segue o conjunto diferenca do Conjunto %d em relacao ao Conjunto %d = ", n1, n2);
-                    complemento(c1, c2);
+                    printf("Gerando o conjunto 7 (diferenca)... Entre o Conjunto %d e o Conjunto %d.\n", n1, n2);
+                    c7 = diferenca(c1, c2);
                 }
                 else if (n1 == 2 && n2 == 3){
-                    printf("Segue o conjunto diferenca do Conjunto %d em relacao ao Conjunto %d = ", n1, n2);
-                    complemento(c3, c2);
+                    printf("Gerando o conjunto 7 (diferenca)... Entre o Conjunto %d e o Conjunto %d.\n", n1, n2);
+                    c7 = diferenca(c3, c2);
                 }
                 else if (n1 == 3 && n2 == 2){
-                    printf("Segue o conjunto diferenca do Conjunto %d em relacao ao Conjunto %d = ", n1, n2);
-                    complemento(c2, c3);
+                    printf("Gerando o conjunto 7 (diferenca)... Entre o Conjunto %d e o Conjunto %d.\n", n1, n2);
+                    c7 = diferenca(c2, c3);
                 }
                 else if (n1 == 3 && n2 == 1){
-                    printf("Segue o conjunto diferenca do Conjunto %d em relacao ao Conjunto %d = ", n1, n2);
-                    complemento(c1, c3);
+                    printf("Gerando o conjunto 7 (diferenca)... Entre o Conjunto %d e o Conjunto %d.\n", n1, n2);
+                    c7 = diferenca(c1, c3);
                 }
-                else printf("{ }\n");
+                else{
+                    if ((n1 == 1 && n2==1) || (n1 == 2 && n2==2) || (n1 == 3 && n2==3)) printf("{ }\n");
+                    else printf("Numero de conjunto invalido!\n");
+                }
                 system("PAUSE");
             break;
             case 15:
@@ -773,7 +795,7 @@ int main(){
                 selectionSort(c1.x, c1.size);
                 selectionSort(c2.x, c2.size);
                 selectionSort(c3.x, c3.size);
-                printf("Qual conjunto voce deseja vizualizar? (1, 2, 3)\n");
+                printf("Qual conjunto voce deseja vizualizar?\n(1, 2, 3) Conjuntos de usuários.\n(4, 5, 6, 7) Respectivamente: Complemento, Uniao, interseccaoao e diferenca.\n");
                 scanf("%d%*c", &n1);
                 printf("Digite 1 para vizualizar em ordem crescente e 0 para vizualizar em ordem decrescente:\n");
                 scanf("%d%*c", &n2);
@@ -781,12 +803,12 @@ int main(){
                     case 1:
                         if(n2 == 1){
                             printf("Conjunto %d em ordem CRESCENTE = ", n1);
-                            printconj(&c1, CRESCENTE);
+                            mostraConjunto(c1, CRESCENTE);
                             printf("\n");
                         }
                         else if (n2==0){
                             printf("Conjunto %d em ordem DECRESCENTE = ", n1);
-                            printconj(&c1, DECRESCENTE);
+                            mostraConjunto(c1, DECRESCENTE);
                             printf("\n");
                         }
                         else printf("Ordenacao invalida!\n");
@@ -794,12 +816,12 @@ int main(){
                     case 2:
                         if(n2 == 1){
                             printf("Conjunto %d em ordem CRESCENTE = ", n1);
-                            printconj(&c2, CRESCENTE);
+                            mostraConjunto(c2, CRESCENTE);
                             printf("\n");
                         }
                         else if (n2==0){
                             printf("Conjunto %d em ordem DECRESCENTE = ", n1);
-                            printconj(&c2, DECRESCENTE);
+                            mostraConjunto(c2, DECRESCENTE);
                             printf("\n");
                         }
                         else printf("Ordenacao invalida!\n");
@@ -807,12 +829,64 @@ int main(){
                     case 3:
                         if(n2 == 1){
                             printf("Conjunto %d em ordem CRESCENTE = ", n1);
-                            printconj(&c3, CRESCENTE);
+                            mostraConjunto(c3, CRESCENTE);
                             printf("\n");
                         }
                         else if (n2==0){
                             printf("Conjunto %d em ordem DECRESCENTE = ", n1);
-                            printconj(&c3, DECRESCENTE);
+                            mostraConjunto(c3, DECRESCENTE);
+                            printf("\n");
+                        }
+                        else printf("Ordenacao invalida!\n");
+                    break;
+                    case 4:
+                        if(n2 == 1){
+                            printf("Conjunto %d em ordem CRESCENTE = ", n1);
+                            mostraConjunto(c4, CRESCENTE);
+                            printf("\n");
+                        }
+                        else if (n2==0){
+                            printf("Conjunto %d em ordem DECRESCENTE = ", n1);
+                            mostraConjunto(c4, DECRESCENTE);
+                            printf("\n");
+                        }
+                        else printf("Ordenacao invalida!\n");
+                    break;
+                    case 5:
+                        if(n2 == 1){
+                            printf("Conjunto %d em ordem CRESCENTE = ", n1);
+                            mostraConjunto(c5, CRESCENTE);
+                            printf("\n");
+                        }
+                        else if (n2==0){
+                            printf("Conjunto %d em ordem DECRESCENTE = ", n1);
+                            mostraConjunto(c5, DECRESCENTE);
+                            printf("\n");
+                        }
+                        else printf("Ordenacao invalida!\n");
+                    break;
+                    case 6:
+                        if(n2 == 1){
+                            printf("Conjunto %d em ordem CRESCENTE = ", n1);
+                            mostraConjunto(c6, CRESCENTE);
+                            printf("\n");
+                        }
+                        else if (n2==0){
+                            printf("Conjunto %d em ordem DECRESCENTE = ", n1);
+                            mostraConjunto(c6, DECRESCENTE);
+                            printf("\n");
+                        }
+                        else printf("Ordenacao invalida!\n");
+                    break;
+                    case 7:
+                        if(n2 == 1){
+                            printf("Conjunto %d em ordem CRESCENTE = ", n1);
+                            mostraConjunto(c7, CRESCENTE);
+                            printf("\n");
+                        }
+                        else if (n2==0){
+                            printf("Conjunto %d em ordem DECRESCENTE = ", n1);
+                            mostraConjunto(c7, DECRESCENTE);
                             printf("\n");
                         }
                         else printf("Ordenacao invalida!\n");
@@ -908,5 +982,6 @@ int main(){
             break;
         }
     }
+    system("CLS");
     return 0;
 }
